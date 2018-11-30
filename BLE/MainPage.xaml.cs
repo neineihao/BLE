@@ -43,6 +43,8 @@ namespace BLE
         //private BluetoothLEDeviceDisplay SelectedBleDevice;
         public string SelectedBleDeviceId;
         public string SelectedBleDeviceId2;
+        private string testID = "BluetoothLE#BluetoothLEe8:2a:ea:ca:da:9a-f5:68:a7:84:e8:f6";
+        private MagBLE MagNode;
 
         // Only one registered characteristic at a time.
         private GattCharacteristic registeredCharacteristic;
@@ -330,7 +332,7 @@ namespace BLE
         }
         #endregion
                           
-        private bool subscribedForNotifications = false;
+        //private bool subscribedForNotifications = false;
         /*
         private async Task<bool> ClearBluetoothLEDeviceAsync()
         {
@@ -356,7 +358,18 @@ namespace BLE
 
              
         #region Connect Button
-        private async void Connect_Button()
+        private void Connect_Button()
+        {
+            var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
+            SelectedBleDeviceId = SelectedBleDevice.Id;
+            MagNode = new MagBLE(SelectedBleDeviceId);
+            MagNode.Connect();
+            Debug.WriteLine("Stop here");
+            Debug.WriteLine(SelectedBleDeviceId);
+        }
+
+
+         /*private async void Connect_Button()
         {
             var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
             SelectedBleDeviceId = SelectedBleDevice.Id;
@@ -414,7 +427,7 @@ namespace BLE
                 }
             }
         }
-
+        */
         private async void Connect_Button2()
         {
             var SelectedBleDevice2 = (BluetoothLEDeviceDisplay)BLEcmbbox2.SelectedItem;
@@ -681,6 +694,14 @@ namespace BLE
         }
         #endregion
         #region Read Value
+        private void Read_All_Data()
+        {
+            float[] valueBuffer = new float[3];
+            MagNode.Measure();
+            valueBuffer = MagNode.MagValue;
+            CharacteristicLatestValue.Text = String.Format("MagX: {0}, MagY: {1}, MagZ: {2}",
+                         valueBuffer[0], valueBuffer[1], valueBuffer[2]);
+        }
         /*
         private async void Read_Click()
         {
@@ -697,31 +718,32 @@ namespace BLE
             }
         }
         */
+        /*
         private async void Read_All_Data()
         {
             string read_context;
             string read_context2;
 
             GattReadResult result = await magCharacteristic.ReadValueAsync(BluetoothCacheMode.Uncached);
-            GattReadResult result2 = await magCharacteristic2.ReadValueAsync(BluetoothCacheMode.Uncached);
+            //GattReadResult result2 = await magCharacteristic2.ReadValueAsync(BluetoothCacheMode.Uncached);
 
             read_context = ReadMagValue(result.Value);
-            read_context2 = ReadMagValue(result2.Value);
+            //read_context2 = ReadMagValue(result2.Value);
 
             if (result.Status == GattCommunicationStatus.Success)
             {
                 CharacteristicLatestValue.Text = $"Read result: {read_context}";
-                CharacteristicLatestValue2.Text = $"Read result: {read_context2}";
+                //CharacteristicLatestValue2.Text = $"Read result: {read_context2}";
                 Info.Text = "Read Sucess";
             }
             else
             {
                 CharacteristicLatestValue.Text = $"Read failed: {result.Status}";
-                CharacteristicLatestValue2.Text = $"Read failed: {result.Status}";
+                //CharacteristicLatestValue2.Text = $"Read failed: {result.Status}";
                 Info.Text = "Read Fail";
             }
         }
-
+        */
         private string ReadValue(IBuffer buffer)
         {
             byte[] data;
