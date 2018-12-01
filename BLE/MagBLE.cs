@@ -23,18 +23,18 @@ namespace BLE
         private GattCharacteristicsResult tempCharacteristic;
         private IBuffer buffer ;
         private byte[] data;
+        private int viberate = 0;
 
         // other place for this UUID
         private Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
         private Guid WriteUUID = new Guid("00002A57-0000-1000-8000-00805f9b34fb");
         private Guid HEALTH_THERMOMETER_UUID = new Guid("00001809-0000-1000-8000-00805f9b34fb");
         //
-
-        public MagBLE(string BluetoothLEid)
-        {
-            this.BluetoothLEid = BluetoothLEid;
-        }
         public float[] MagValue { get; } = new float[3];
+        public float MagX { get { return MagValue[0]; } }
+        public float MagY { get { return MagValue[1]; } }
+        public float MagZ { get { return MagValue[2]; } }
+        public string Name { get; set; }
         public string ID
         {
             get
@@ -46,6 +46,20 @@ namespace BLE
                 this.BluetoothLEid = value;
             }
         }
+        public string MagString
+        {
+            get
+            {
+                return String.Format("MagX: {0}, MagY: {1}, MagZ: {2}", MagValue[0], MagValue[1], MagValue[2]);
+            }
+        }
+
+        public MagBLE(string BluetoothLEid, string Name)
+        {
+            this.BluetoothLEid = BluetoothLEid;
+            this.Name = Name;
+        }
+        
 
         public async void Connect()
         {
@@ -94,7 +108,6 @@ namespace BLE
             }
             else
             {
-
                 Debug.WriteLine("Read Fail");
             }
         }// end Measure method
@@ -124,10 +137,31 @@ namespace BLE
             }
         }
         
-        public void WriteValue(string writevalue)
+        public async Task<bool> WriteValueAsync(string writevalue)
         {
             var writeBuffer = CryptographicBuffer.ConvertStringToBinary(writevalue,
                     BinaryStringEncoding.Utf8);
+            var writeSuccessful = await WriteBufferToSelectedCharacteristicAsync(writeBuffer);
+            return writeSuccessful;
         }
+
+        public void Viberate()
+        {
+            if (viberate == 0)
+            {
+                viberate = 1;
+            }
+            else if (viberate == 1)
+            {
+                viberate = 0;
+            }
+            else
+            {
+                viberate = 0;
+            }
+            var result = WriteValueAsync(viberate.ToString());
+            Debug.WriteLine("Write T/F :" + result);
+        }
+
     }
 }
