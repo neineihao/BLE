@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
@@ -13,7 +14,7 @@ using Windows.Storage.Streams;
 
 namespace BLE
 {
-    class MagBLE
+    public class MagBLE : INotifyPropertyChanged
     {
         private string BluetoothLEid;
         private BluetoothLEDevice bluetoothLeDevice = null;
@@ -24,6 +25,7 @@ namespace BLE
         private IBuffer buffer ;
         private byte[] data;
         private int viberate = 0;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         // other place for this UUID
         private Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
@@ -59,6 +61,7 @@ namespace BLE
             this.BluetoothLEid = BluetoothLEid;
             this.Name = Name;
         }
+
         
 
         public async void Connect()
@@ -110,6 +113,7 @@ namespace BLE
             {
                 Debug.WriteLine("Read Fail");
             }
+            OnPropertyChanged("MagString");
         }// end Measure method
 
         private async Task<bool> WriteBufferToSelectedCharacteristicAsync(IBuffer buffer)
@@ -163,5 +167,9 @@ namespace BLE
             Debug.WriteLine("Write T/F :" + result);
         }
 
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }
