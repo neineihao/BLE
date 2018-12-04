@@ -27,13 +27,14 @@ namespace BLE
         private ObservableCollection<BluetoothLEDeviceDisplay> KnownDevices = new ObservableCollection<BluetoothLEDeviceDisplay>();
         private List<DeviceInformation> UnknownDevices = new List<DeviceInformation>();
         private ObservableCollection<BluetoothLEAttributeDisplay> ServiceCollection = new ObservableCollection<BluetoothLEAttributeDisplay>();
-        private ObservableCollection<MagNode> SelectedDeviced = new ObservableCollection<MagNode>();
+        private ObservableCollection<MagNode> MagDeviced = new ObservableCollection<MagNode>();
         private ObservableCollection<SensorNode> SensorDeviced = new ObservableCollection<SensorNode>();
         private DeviceWatcher deviceWatcher;
         private List<float> dataList = new List<float>(); 
         //private BluetoothLEDeviceDisplay SelectedBleDevice;
         public string SelectedBleDeviceId;
         public string SelectedBleDeviceId2;
+        public float temp;
         private string testID = "BluetoothLE#BluetoothLEe8:2a:ea:ca:da:9a-f5:68:a7:84:e8:f6";
         private MagNode MagNode;
 
@@ -295,24 +296,53 @@ namespace BLE
             SelectedBleDeviceId = SelectedBleDevice.Id;
             MagNode = new MagNode(SelectedBleDeviceId, SelectedBleDevice.Name);
             MagNode.Connect();
-            SelectedDeviced.Add(MagNode);
+            MagDeviced.Add(MagNode);
             Debug.WriteLine(SelectedBleDeviceId);
         }
 
-        public void Get_Cal_Data()
+        public float Len_Cal(float[] a, float[] b)
         {
+            temp = 0;
+            for(var i = 0; i < 3; i++)
+            {
+                temp += (float)Math.Pow((a[i] - b[i]), 2);
+            }
+            return (float)Math.Pow(temp, 0.5);
+        }
+
+
+        public async void Get_Cal_Data()
+        {
+            List<float[]> buffer = new List<float[]>();
             for (var i = 0; i < SensorDeviced.Count; i++)
             {
                 SensorDeviced[i].MeasureData = new List<CalUnit>();
             }// init the MeasureData list in class of SensorDeviced
-            for (var i = 0; i < SelectedDeviced.Count; i++)
+            for (var i = 0; i < MagDeviced.Count; i++)
             {
-                for (var j = 0; j < SelectedDeviced.Count; j++)
+                for (var j = 0; j < SensorDeviced.Count; j++)
                 {
-                    SensorDeviced[j].MeasureData.Add(new CalUnit(SelectedDeviced[i].Position, 0));
+                    SensorDeviced[j].MeasureData.Add(new CalUnit(MagDeviced[i].Position, 0));
                 }
             }
-        
+            for (var i = 0; i< MagDeviced.Count ; i++)
+            {
+                MagDeviced[i].IOSignal();
+                await Task.Delay(TimeSpan.FromSeconds(0.1));
+                for (var j = 0; j < SensorDeviced.Count; j++)
+                {
+                    SensorDeviced[j].AverageMeasure();
+                    buffer.Add(SensorDeviced[j].MagValue);
+                }
+                MagDeviced[i].IOSignal();
+                await Task.Delay(TimeSpan.FromSeconds(0.1));
+                for (var j = 0; j < SensorDeviced.Count; j++)
+                {
+                    SensorDeviced[j].AverageMeasure();
+                    float len_result = Len_Cal(SensorDeviced[j].MagValue, buffer[j]);
+                    SensorDeviced[j].MeasureData[i].Signal = len_result;
+                }
+            }
         }
     }
 }

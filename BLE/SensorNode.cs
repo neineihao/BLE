@@ -10,6 +10,6 @@ namespace BLE
     {
         public List<CalUnit> MeasureData { get;  set; }
         SensorNode(string BluetoothLEid, string Name) : base(BluetoothLEid, Name) { }
-
+        
     }
 }

@@ -125,7 +125,7 @@ namespace BLE
 
         public async void AverageMeasure()
         {
-            Debug.WriteLine("The times of avg: " + times);
+            GetMagData(); // Add one times
             for (int i = 0; i < times; i++)
             {
                 await Task.Delay(TimeSpan.FromSeconds(0.2));
