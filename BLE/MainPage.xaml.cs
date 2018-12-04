@@ -310,7 +310,6 @@ namespace BLE
             return (float)Math.Pow(temp, 0.5);
         }
 
-
         public async void Get_Cal_Data()
         {
             List<float[]> buffer = new List<float[]>();
@@ -343,6 +342,16 @@ namespace BLE
                     SensorDeviced[j].MeasureData[i].Signal = len_result;
                 }
             }
+            for (var i = 0; i < SensorDeviced.Count; i++)
+            {
+                SensorDeviced[i].GetPosition();
+            }
         }
+
+
+
+
+
+
     }
 }

@@ -31,7 +31,7 @@ namespace BLE
         protected Guid HEALTH_THERMOMETER_UUID = new Guid("00001809-0000-1000-8000-00805f9b34fb");
         //
         public float[] MagValue { get; } = new float[3];
-        public float[] Position { get; set; } = new float[3];
+        public double[] Position { get; set; } = new double[3];
         private float[] MagTemp = new float[3];
         public float MagX { get { return MagValue[0]; } }
         public float MagY { get { return MagValue[1]; } }

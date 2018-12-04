@@ -8,9 +8,9 @@ namespace BLE
 {
     class CalUnit
     {
-        public float[] Position { get; set; } = new float[3];
+        public double[] Position { get; set; } = new double[3];
         public float Signal { get; set; }
-        public CalUnit(float[] position, float signal)
+        public CalUnit(double[] position, float signal)
         {
             this.Signal = signal;
             this.Position = position;

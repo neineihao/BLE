@@ -27,10 +27,10 @@
                 <Button x:Name="Stop" Content="Stop" Click="{x:Bind Stop_Button}" Margin="10,0,0,0" />
                 <TextBlock Text="Info" x:Name="Info" Margin="30,10,0,0"/>
             </StackPanel>
-            
-            <ListView ItemsSource="{x:Bind SelectedDeviced}">
+
+            <ListView ItemsSource="{x:Bind MagDeviced}">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="ble:MagBLE">
+                    <DataTemplate x:DataType="ble:MagNode">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Equipment Name: " Margin="0,10,0,0"/>
                             <TextBlock Text="{x:Bind Name}" Margin="0,10,0,0"/>
@@ -44,6 +44,5 @@
 
             </ListView>
         </StackPanel>
-
     </Grid>
 </Page>
