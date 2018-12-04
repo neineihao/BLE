@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace BLE
 {
-    class SensorNode
+    class SensorNode : BLENode
     {
-        public float[] Position { set; get; } = new float[3];
         public List<CalUnit> MeasureData { get;  set; }
-
-        
+        SensorNode(string BluetoothLEid, string Name) : base(BluetoothLEid, Name) { }
 
     }
 }

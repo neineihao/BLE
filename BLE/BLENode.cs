@@ -17,7 +17,7 @@ namespace BLE
         private string BluetoothLEid;
         private BluetoothLEDevice bluetoothLeDevice = null;
         private GattCharacteristic magCharacteristic;
-        private GattCharacteristic writeCharacteristic;
+        protected GattCharacteristic writeCharacteristic;
         private GattDeviceService selectedService;
         private GattCharacteristicsResult tempCharacteristic;
         //private IBuffer buffer ;
@@ -26,9 +26,9 @@ namespace BLE
         public event PropertyChangedEventHandler PropertyChanged;
 
         // other place for this UUID
-        private Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
-        private Guid WriteUUID = new Guid("00002A57-0000-1000-8000-00805f9b34fb");
-        private Guid HEALTH_THERMOMETER_UUID = new Guid("00001809-0000-1000-8000-00805f9b34fb");
+        protected Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
+        protected Guid WriteUUID = new Guid("00002A57-0000-1000-8000-00805f9b34fb");
+        protected Guid HEALTH_THERMOMETER_UUID = new Guid("00001809-0000-1000-8000-00805f9b34fb");
         //
         public float[] MagValue { get; } = new float[3];
         public float[] Position { get; set; } = new float[3];

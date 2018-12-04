@@ -27,7 +27,7 @@ namespace BLE
         private ObservableCollection<BluetoothLEDeviceDisplay> KnownDevices = new ObservableCollection<BluetoothLEDeviceDisplay>();
         private List<DeviceInformation> UnknownDevices = new List<DeviceInformation>();
         private ObservableCollection<BluetoothLEAttributeDisplay> ServiceCollection = new ObservableCollection<BluetoothLEAttributeDisplay>();
-        private ObservableCollection<MagBLE> SelectedDeviced = new ObservableCollection<MagBLE>();
+        private ObservableCollection<MagNode> SelectedDeviced = new ObservableCollection<MagNode>();
         private ObservableCollection<SensorNode> SensorDeviced = new ObservableCollection<SensorNode>();
         private DeviceWatcher deviceWatcher;
         private List<float> dataList = new List<float>(); 
@@ -35,7 +35,7 @@ namespace BLE
         public string SelectedBleDeviceId;
         public string SelectedBleDeviceId2;
         private string testID = "BluetoothLE#BluetoothLEe8:2a:ea:ca:da:9a-f5:68:a7:84:e8:f6";
-        private MagBLE MagNode;
+        private MagNode MagNode;
 
         #region Uuid
         Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
@@ -293,7 +293,7 @@ namespace BLE
         {
             var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
             SelectedBleDeviceId = SelectedBleDevice.Id;
-            MagNode = new MagBLE(SelectedBleDeviceId, SelectedBleDevice.Name);
+            MagNode = new MagNode(SelectedBleDeviceId, SelectedBleDevice.Name);
             MagNode.Connect();
             SelectedDeviced.Add(MagNode);
             Debug.WriteLine(SelectedBleDeviceId);
