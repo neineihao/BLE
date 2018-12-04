@@ -22,9 +22,10 @@ namespace BLE
         private GattCharacteristic writeCharacteristic;
         private GattDeviceService selectedService;
         private GattCharacteristicsResult tempCharacteristic;
-        private IBuffer buffer ;
+        //private IBuffer buffer ;
         private byte[] data;
         private int viberate = 0;
+        private int times = 5;
         public event PropertyChangedEventHandler PropertyChanged;
 
         // other place for this UUID
@@ -33,9 +34,12 @@ namespace BLE
         private Guid HEALTH_THERMOMETER_UUID = new Guid("00001809-0000-1000-8000-00805f9b34fb");
         //
         public float[] MagValue { get; } = new float[3];
+        public float[] Position { get; set; } = new float[3];
+        private float[] MagTemp = new float[3];
         public float MagX { get { return MagValue[0]; } }
         public float MagY { get { return MagValue[1]; } }
         public float MagZ { get { return MagValue[2]; } }
+        public int AvgTimes { get { return times; } set { times = (int)value;} }
         public string Name { get; set; }
         public string ID
         {
@@ -92,14 +96,18 @@ namespace BLE
             }
         }//end method connect
 
-        public async void Measure()
+
+        public async void GetData()
         {
+            
+            
             GattReadResult result = await magCharacteristic.ReadValueAsync(BluetoothCacheMode.Uncached);
             if (result.Status == GattCommunicationStatus.Success)
             {
                 CryptographicBuffer.CopyToByteArray(result.Value, out data);
                 try
                 {   //change the data to three float 
+                    
                     MagValue[0] = BitConverter.ToSingle(data, 0);
                     MagValue[1] = BitConverter.ToSingle(data, 4);
                     MagValue[2] = BitConverter.ToSingle(data, 8);
@@ -113,8 +121,39 @@ namespace BLE
             {
                 Debug.WriteLine("Read Fail");
             }
+        }
+
+        public void Measure()
+        {
+            GetData();
             OnPropertyChanged("MagString");
         }// end Measure method
+
+        public async void AverageMeasure()
+        {
+            Debug.WriteLine("The times of avg: " + times);
+            for (int i = 0; i< times; i++)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(0.2));
+                GetData();
+                Debug.WriteLine(" X: "+ MagX + " Y: "+ MagY + " Z: " + MagY);
+                MagTemp[0] += MagValue[0];
+                MagTemp[1] += MagValue[1];
+                MagTemp[2] += MagValue[2];
+            }
+            MagValue[0] = MagTemp[0] / times;
+            MagValue[1] = MagTemp[1] / times;
+            MagValue[2] = MagTemp[2] / times;
+            OnPropertyChanged("MagString");
+            MagTemp[0] = 0;
+            MagTemp[1] = 0;
+            MagTemp[2] = 0;
+        }
+
+
+
+
+
 
         private async Task<bool> WriteBufferToSelectedCharacteristicAsync(IBuffer buffer)
         {
@@ -149,7 +188,7 @@ namespace BLE
             return writeSuccessful;
         }
 
-        public void Viberate()
+        public void IOSignal()
         {
             if (viberate == 0)
             {

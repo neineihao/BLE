@@ -28,23 +28,14 @@ namespace BLE
         private List<DeviceInformation> UnknownDevices = new List<DeviceInformation>();
         private ObservableCollection<BluetoothLEAttributeDisplay> ServiceCollection = new ObservableCollection<BluetoothLEAttributeDisplay>();
         private ObservableCollection<MagBLE> SelectedDeviced = new ObservableCollection<MagBLE>();
+        private ObservableCollection<SensorNode> SensorDeviced = new ObservableCollection<SensorNode>();
         private DeviceWatcher deviceWatcher;
         private List<float> dataList = new List<float>(); 
-        private int viberate = 0;
         //private BluetoothLEDeviceDisplay SelectedBleDevice;
         public string SelectedBleDeviceId;
         public string SelectedBleDeviceId2;
         private string testID = "BluetoothLE#BluetoothLEe8:2a:ea:ca:da:9a-f5:68:a7:84:e8:f6";
         private MagBLE MagNode;
-
-        // Only one registered characteristic at a time.
-
-        #region Error Codes
-        readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
-        readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
-        readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
-        readonly int E_DEVICE_NOT_AVAILABLE = unchecked((int)0x800710df); // HRESULT_FROM_WIN32(ERROR_DEVICE_NOT_AVAILABLE)
-        #endregion
 
         #region Uuid
         Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
@@ -298,7 +289,7 @@ namespace BLE
         }
         #endregion
         
-        private void Connect_Button()
+        private void Anchor_Add()
         {
             var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
             SelectedBleDeviceId = SelectedBleDevice.Id;
@@ -308,21 +299,20 @@ namespace BLE
             Debug.WriteLine(SelectedBleDeviceId);
         }
 
-
-        private void ViberateToggle_Click()
+        public void Get_Cal_Data()
         {
-
-            MagNode.Viberate();
-        }
+            for (var i = 0; i < SensorDeviced.Count; i++)
+            {
+                SensorDeviced[i].MeasureData = new List<CalUnit>();
+            }// init the MeasureData list in class of SensorDeviced
+            for (var i = 0; i < SelectedDeviced.Count; i++)
+            {
+                for (var j = 0; j < SelectedDeviced.Count; j++)
+                {
+                    SensorDeviced[j].MeasureData.Add(new CalUnit(SelectedDeviced[i].Position, 0));
+                }
+            }
         
-        private void Read_All_Data()
-        {
-            float[] valueBuffer = new float[3];
-            MagNode.Measure();
-            valueBuffer = MagNode.MagValue;
-            CharacteristicLatestValue.Text = String.Format("MagX: {0}, MagY: {1}, MagZ: {2}",
-                         valueBuffer[0], valueBuffer[1], valueBuffer[2]);
         }
-
     }
 }

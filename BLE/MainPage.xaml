@@ -16,52 +16,34 @@
             <TextBlock TextWrapping="Wrap" Style="{StaticResource SampleHeaderTextStyle}">
                 Press start to enumerate nearby Bluetooth Low Energy devices
             </TextBlock>
-            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                <Button x:Name="Start" Content="Start" Click="{x:Bind Start_Button}" Margin="0,0,10,0"/>
-                <Button x:Name="Stop" Content="Stop" Click="{x:Bind Stop_Button}" Margin="10,0,0,0" />
-            </StackPanel>
             <StackPanel Margin="0,5,0,5" Orientation="Horizontal">
                 <ComboBox x:Name="BLEcmbbox" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Choose a BLE equipment"
                           ItemsSource="{x:Bind KnownDevices}" DisplayMemberPath="Name" Margin="0,0,10,0"/>
-                <Button x:Name="ConnectButton" Content="Connect" Click="{x:Bind Connect_Button}" Margin="10,0,10,0"/>
-                <!--ComboBox x:Name="ServiceChoose" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Service"
-                          ItemsSource="{x:Bind ServiceCollection}" DisplayMemberPath="Name" Margin="0,0,10,0"/-->
-                <!--Button x:Name="Subscribe" Content="Subscribe" Click="{x:Bind ValueChangedSubscribeToggle_Click}" Margin="10,0,10,0"/-->
-                <Button x:Name="Viberate" Content="Viberate" Click="{x:Bind ViberateToggle_Click}" Margin="10,0,10,0"/>
-                <TextBlock x:Name="CharacteristicLatestValue" Margin="0,10,0,0"/>
+                <Button x:Name="Anchor" Content="Anchor Node" Click="{x:Bind Anchor_Add}" Margin="10,0,10,0"/>
             </StackPanel>
-            <StackPanel Margin="0,5,0,5" Orientation="Horizontal">
-                <ComboBox x:Name="BLEcmbbox2" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Choose a BLE equipment"
-                          ItemsSource="{x:Bind KnownDevices}" DisplayMemberPath="Name" Margin="0,0,10,0"/>
-                <!--Button x:Name="ConnectButton2" Content="Connect" Click="{x:Bind Connect_Button2}" Margin="10,0,10,0"/-->
-                <!--ComboBox x:Name="ServiceChoose" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Service"
-                          ItemsSource="{x:Bind ServiceCollection}" DisplayMemberPath="Name" Margin="0,0,10,0"/-->
-                <!--Button x:Name="Subscribe" Content="Subscribe" Click="{x:Bind ValueChangedSubscribeToggle_Click}" Margin="10,0,10,0"/-->
-                <!--Button x:Name="Viberate" Content="Viberate" Click="{x:Bind ViberateToggle_Click}" Margin="10,0,10,0"/-->
-                <TextBlock x:Name="CharacteristicLatestValue2" Margin="0,10,0,0"/>
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                <TextBlock Text="Device Watcher:" Margin="0,10,0,0"/>
+                <Button x:Name="Start" Content="Start" Click="{x:Bind Start_Button}" Margin="20,0,10,0"/>
+                <Button x:Name="Stop" Content="Stop" Click="{x:Bind Stop_Button}" Margin="10,0,0,0" />
+                <TextBlock Text="Info" x:Name="Info" Margin="30,10,0,0"/>
             </StackPanel>
-            <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
-                <TextBox x:Name="Info" HorizontalAlignment="Center" Margin="10,0,10,0"/>
-            </StackPanel>
-            <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
-                <Button x:Name="Read" Content="Read" Click="{x:Bind Read_All_Data}" Margin="10,0,10,0"/>
-                <!--TextBox x:Name="Read_value" HorizontalAlignment="Center" Margin="0,0,10,0"/-->
-            </StackPanel>
+            
             <ListView ItemsSource="{x:Bind SelectedDeviced}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="ble:MagBLE">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Equipment Name: " Margin="0,10,0,0"/>
                             <TextBlock Text="{x:Bind Name}" Margin="0,10,0,0"/>
-                            <Button Content="Read Data" Click="{x:Bind Measure}" Margin="10,0,10,0"/>
-                            <Button Content="Vibate" Click="{x:Bind Viberate}" Margin="10,0,10,0"/>
-                            <TextBlock Text="{x:Bind MagString,Mode=OneWay }" Margin="0,10,0,0"/>
+                            <Button Content="Read Data" Click="{x:Bind Measure}" Margin="10,2.5,10,2.5"/>
+                            <Button Content="Vibate" Click="{x:Bind IOSignal}" Margin="10,2.5,10,2.5"/>
+                            <Button Content="Avg" Click="{x:Bind AverageMeasure}" Margin="10,2.5,10,2.5"/>
+                            <TextBlock Text="{x:Bind MagString,Mode=OneWay}" Margin="0,10,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
 
             </ListView>
         </StackPanel>
-       
+
     </Grid>
 </Page>
