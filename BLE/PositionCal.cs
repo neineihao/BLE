@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,13 +15,16 @@ namespace BLE
     }
     class PositionCal
     {
-        private double Co = 2285692.36935118f;
+        private double Co = 285692.36935118f;
         public int Times { get; set; } = 100;
-        public float Alpha { get; set; } = 0.01f;
+        public float Alpha { get; set; } = 0.001f;
         public double[] OwnPosition { set; get; } 
         public List<CalUnit> MagData { set; get; }
-        public PositionCal()
+        public PositionCal(double[] position, List<CalUnit> MagData)
         {
+            this.OwnPosition = position;
+            this.MagData = MagData;
+
             //Input data : Initial position, Coil positioni & receive signal
         }
 
@@ -54,15 +58,20 @@ namespace BLE
             for(var i = 0; i < Times; i++)
             {
                 obj = 0;
-                for(var j = 0; j < MagData.Count; j++)
+                //Debug.WriteLine("Position Before: (" + OwnPosition[0] + ", " + OwnPosition[1] + ", " + OwnPosition[2] + ")");
+                for (var j = 0; j < MagData.Count; j++)
                 {
                     CalBuffer buffer =  PartCalculation(OwnPosition, MagData[j]);
                     obj += buffer.Cost;
                     for(var k = 0; k < 3; k++)
                     {
-                        OwnPosition[k] -= buffer.Pos[k];
+                  //      Debug.WriteLine("Test: " + OwnPosition[k]);
+                        OwnPosition[k] -= talpha * buffer.Pos[k];
+                  //      Debug.WriteLine("Test: " + OwnPosition[k]);
                     }
                 }
+                //Debug.WriteLine("Position now: (" + OwnPosition[0] + ", " + OwnPosition[1] + ", " + OwnPosition[2] + ")");
+                //Debug.WriteLine("Obj now: " + obj);
             }
             result.Cost = obj;
             result.Pos = OwnPosition;

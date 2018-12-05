@@ -22,7 +22,7 @@ namespace BLE
         private GattCharacteristicsResult tempCharacteristic;
         //private IBuffer buffer ;
         private byte[] data;
-        private int times = 5;
+        private int times = 3;
         public event PropertyChangedEventHandler PropertyChanged;
 
         // other place for this UUID
@@ -57,10 +57,11 @@ namespace BLE
             }
         }
 
-        public BLENode(string BluetoothLEid, string Name)
+        public BLENode(string BluetoothLEid, string Name, double[] position)
         {
             this.BluetoothLEid = BluetoothLEid;
             this.Name = Name;
+            this.Position = position;
         }
 
         public async void Connect()
@@ -128,7 +129,7 @@ namespace BLE
             GetMagData(); // Add one times
             for (int i = 0; i < times; i++)
             {
-                await Task.Delay(TimeSpan.FromSeconds(0.2));
+                await Task.Delay(TimeSpan.FromSeconds(0.1));
                 GetMagData();
                 Debug.WriteLine(" X: " + MagX + " Y: " + MagY + " Z: " + MagY);
                 MagTemp[0] += MagValue[0];

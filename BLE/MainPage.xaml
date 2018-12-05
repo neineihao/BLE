@@ -20,6 +20,7 @@
                 <ComboBox x:Name="BLEcmbbox" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Choose a BLE equipment"
                           ItemsSource="{x:Bind KnownDevices}" DisplayMemberPath="Name" Margin="0,0,10,0"/>
                 <Button x:Name="Anchor" Content="Anchor Node" Click="{x:Bind Anchor_Add}" Margin="10,0,10,0"/>
+                <Button x:Name="Test_Button" Content="Test" Click="{x:Bind Test}" Margin="10,0,10,0"/>
             </StackPanel>
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                 <TextBlock Text="Device Watcher:" Margin="0,10,0,0"/>

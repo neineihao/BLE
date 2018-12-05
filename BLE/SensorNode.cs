@@ -10,15 +10,16 @@ namespace BLE
     {
         public List<CalUnit> MeasureData { get;  set; }
 
-        private PositionCal PositionManager = new PositionCal();
+        private PositionCal PositionManager;
 
-        SensorNode(string BluetoothLEid, string Name) : base(BluetoothLEid, Name) {}
+        public SensorNode(string BluetoothLEid, string Name, double[] position) : base(BluetoothLEid, Name, position) {}
 
         public void GetPosition()
         {
-            PositionManager.OwnPosition = Position;
-            PositionManager.MagData = MeasureData;
+            //PositionManager.OwnPosition = Position;
+            //PositionManager.MagData = MeasureData;
             // May have problem here
+            PositionManager = new PositionCal(Position, MeasureData);
             CalBuffer buffer = PositionManager.Calculation();
             Position = buffer.Pos;
             OnPropertyChanged("Position");

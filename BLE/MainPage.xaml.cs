@@ -37,6 +37,7 @@ namespace BLE
         public float temp;
         private string testID = "BluetoothLE#BluetoothLEe8:2a:ea:ca:da:9a-f5:68:a7:84:e8:f6";
         private MagNode MagNode;
+        Random rnd = new Random();
 
         #region Uuid
         Guid MagUUID = new Guid("00002AA1-0000-1000-8000-00805f9b34fb");
@@ -290,11 +291,50 @@ namespace BLE
         }
         #endregion
         
+        private void Test()
+        {
+            double[] position = new double[] { rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble() };
+            SensorNode testNode = new SensorNode("test Node", testID, position);
+            List<CalUnit> testData = new List<CalUnit>();
+            CalUnit test = new CalUnit(new double[] { 32.0, 10.3, 20.5 }, 35.401);
+            testData.Add(test);
+            CalUnit test2 = new CalUnit(new double[] { -100.2, 5.0, 50.5 }, 30.458);
+            testData.Add(test2);
+            CalUnit test3 = new CalUnit(new double[] { 30.0, 40.49, 0.0 }, 26.508);
+            testData.Add(test3);
+            testNode.MeasureData = testData;
+            testNode.GetPosition();
+            double[] result = testNode.Position;
+            string resultString = "Result X: " + result[0] + ", Y: " + result[1] + ", Z: " + result[2] + "\n";
+            Info.Text = resultString;
+        }
+
+
+
+
         private void Anchor_Add()
         {
             var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
             SelectedBleDeviceId = SelectedBleDevice.Id;
-            MagNode = new MagNode(SelectedBleDeviceId, SelectedBleDevice.Name);
+            double[] position;
+            switch (MagDeviced.Count)
+            {
+                case 0:
+                    position = new double[] { 0, 0, 0 };
+                    break;
+                case 1:
+                    position = new double[] { rnd.NextDouble(), 0, 0 };
+                    break;
+                case 2:
+                    position = new double[] { rnd.NextDouble(), rnd.NextDouble(), 0 };
+                    break;
+
+                default:
+                    position = new double[] { rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble() };
+                    break;
+            }
+
+            MagNode = new MagNode(SelectedBleDeviceId, SelectedBleDevice.Name, position);
             MagNode.Connect();
             MagDeviced.Add(MagNode);
             Debug.WriteLine(SelectedBleDeviceId);

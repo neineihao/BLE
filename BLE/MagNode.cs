@@ -18,7 +18,7 @@ namespace BLE
     {
         private int viberate = 0;
 
-        public MagNode(string BluetoothLEid, string Name) : base(BluetoothLEid, Name){ }
+        public MagNode(string BluetoothLEid, string Name, double[] position) : base(BluetoothLEid, Name, position){ }
 
         private async Task<bool> WriteBufferToSelectedCharacteristicAsync(IBuffer buffer)
         {
