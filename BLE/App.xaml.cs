@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,11 +27,18 @@ namespace BLE
         /// 初始化單一應用程式物件。這是第一行執行之撰寫程式碼，
         /// 而且其邏輯相當於 main() 或 WinMain()。
         /// </summary>
+        /// 
+
+        internal static ObservableCollection<MagNode> AnchorCollection;
+        internal static ObservableCollection<SensorNode> SensorCollection;
+
+
         public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+
 
         /// <summary>
         /// 在應用程式由終端使用者正常啟動時叫用。當啟動應用

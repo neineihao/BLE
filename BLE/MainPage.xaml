@@ -2,48 +2,46 @@
     x:Class="BLE.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MagPositionSystem"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ble="using:BLE"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Style TargetType="Button" x:Key="NavigationButtonStyle">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="0,0,2,2"/>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="12,10,12,12">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <StackPanel Margin="0,0,0,10">
-            <TextBlock TextWrapping="Wrap" Style="{StaticResource SampleHeaderTextStyle}">
-                Press start to enumerate nearby Bluetooth Low Energy devices
-            </TextBlock>
-            <StackPanel Margin="0,5,0,5" Orientation="Horizontal">
-                <ComboBox x:Name="BLEcmbbox" HorizontalAlignment="Left" VerticalAlignment="Top" PlaceholderText="Choose a BLE equipment"
-                          ItemsSource="{x:Bind KnownDevices}" DisplayMemberPath="Name" Margin="0,0,10,0"/>
-                <Button x:Name="Anchor" Content="Anchor Node" Click="{x:Bind Anchor_Add}" Margin="10,0,10,0"/>
-                <Button x:Name="Test_Button" Content="Test" Click="{x:Bind Test}" Margin="10,0,10,0"/>
-            </StackPanel>
-            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                <TextBlock Text="Device Watcher:" Margin="0,10,0,0"/>
-                <Button x:Name="Start" Content="Start" Click="{x:Bind Start_Button}" Margin="20,0,10,0"/>
-                <Button x:Name="Stop" Content="Stop" Click="{x:Bind Stop_Button}" Margin="10,0,0,0" />
-                <TextBlock Text="Info" x:Name="Info" Margin="30,10,0,0"/>
-            </StackPanel>
-
-            <ListView ItemsSource="{x:Bind MagDeviced}">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="ble:MagNode">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Equipment Name: " Margin="0,10,0,0"/>
-                            <TextBlock Text="{x:Bind Name}" Margin="0,10,0,0"/>
-                            <Button Content="Read Data" Click="{x:Bind Measure}" Margin="10,2.5,10,2.5"/>
-                            <Button Content="Vibate" Click="{x:Bind IOSignal}" Margin="10,2.5,10,2.5"/>
-                            <Button Content="Avg" Click="{x:Bind AverageMeasure}" Margin="10,2.5,10,2.5"/>
-                            <TextBlock Text="{x:Bind MagString,Mode=OneWay}" Margin="0,10,0,0"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-
-            </ListView>
-        </StackPanel>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="8*"/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+            <Button Name="Scenario1" Click="Scenario1_Click" Grid.Row="0" Style="{StaticResource NavigationButtonStyle}">
+                <StackPanel>
+                    <TextBlock Text="Find Equipment" FontSize="15"/>
+                </StackPanel>
+            </Button>
+            <Button Name="Scenario2" Click="Scenario2_Click" Grid.Row="1" Style="{StaticResource NavigationButtonStyle}">
+                <StackPanel>
+                    <TextBlock Text="Position System" FontSize="15"/>
+                </StackPanel>
+            </Button>
+            <StackPanel Background="Black" Grid.Row="3"/>
+        </Grid>
+        <Frame Name="MyFrame" Grid.Column="1"/>
     </Grid>
+
 </Page>
