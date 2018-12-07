@@ -43,5 +43,6 @@ namespace BLE
         {
             MyFrame.Navigate(typeof(CalculationPage));
         }
+
     }
 }

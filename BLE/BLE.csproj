@@ -105,6 +105,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MovingPoint.cs" />
     <Compile Include="PairPage.xaml.cs">
       <DependentUpon>PairPage.xaml</DependentUpon>
     </Compile>
@@ -120,6 +121,8 @@
     <None Include="BLE_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\3D_grid.png" />
+    <Content Include="Assets\3D_grid_v2.png" />
     <Content Include="Assets\blue_point.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
