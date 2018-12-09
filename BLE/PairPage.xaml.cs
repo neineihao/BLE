@@ -305,7 +305,7 @@ namespace BLE
         }
         #endregion
 
-        private void Test()
+        private void Test(object sender, RoutedEventArgs e)
         {
             double[] position = new double[] { rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble() };
             SensorNode testNode = new SensorNode("test Node", testID, position);
@@ -321,6 +321,35 @@ namespace BLE
             double[] result = testNode.Position;
             string resultString = "Result X: " + result[0] + ", Y: " + result[1] + ", Z: " + result[2] + "\n";
             Info.Text = resultString;
+        }
+
+        private void Change_Node(object sender, RoutedEventArgs e)
+        {
+            if (SensorList.SelectedItem == null)
+            {
+                Info.Text = "Error, Please Select a Item";
+            }
+            else
+            {
+                SensorNode selectedSnesor = SensorList.SelectedItem as SensorNode;
+                Info.Text = "" + selectedSnesor.Name;
+                foreach (SensorNode item in SensorDeviced)
+                {
+                    if (item.ID == selectedSnesor.ID)
+                    {
+                        SensorDeviced.Remove(item);
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                CoilObj = new MagNode(selectedSnesor.ID, selectedSnesor.Name, selectedSnesor.Position);
+                CoilObj.Connect();
+                MagDeviced.Add(CoilObj);
+
+            }
         }
 
         public double[] InitailizePosition()
@@ -345,7 +374,7 @@ namespace BLE
             return position;
         }
 
-        private void Sensor_Add()
+        private void Sensor_Add(object sender, RoutedEventArgs e)
         {
             var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
             SelectedBleDeviceId = SelectedBleDevice.Id;
@@ -357,28 +386,11 @@ namespace BLE
         }
 
 
-        private void Anchor_Add()
+        private void Anchor_Add(object sender, RoutedEventArgs e)
         {
             var SelectedBleDevice = (BluetoothLEDeviceDisplay)BLEcmbbox.SelectedItem;
             SelectedBleDeviceId = SelectedBleDevice.Id;
-            double[] position;
-            switch (MagDeviced.Count)
-            {
-                case 0:
-                    position = new double[] { 0, 0, 0 };
-                    break;
-                case 1:
-                    position = new double[] { rnd.NextDouble(), 0, 0 };
-                    break;
-                case 2:
-                    position = new double[] { rnd.NextDouble(), rnd.NextDouble(), 0 };
-                    break;
-
-                default:
-                    position = new double[] { rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble() };
-                    break;
-            }
-
+            double[] position = InitailizePosition();
             CoilObj = new MagNode(SelectedBleDeviceId, SelectedBleDevice.Name, position);
             CoilObj.Connect();
             MagDeviced.Add(CoilObj);

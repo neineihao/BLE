@@ -36,7 +36,8 @@ namespace BLE
     {
         private ObservableCollection<MagNode> CoilDeviced = new ObservableCollection<MagNode>();
         private ObservableCollection<SensorNode> SensorDeviced = new ObservableCollection<SensorNode>();
-        private ObservableCollection<TestNode> TestDraw = new ObservableCollection<TestNode>();
+        public ObservableCollection<Ellipse> SensorContainer = new ObservableCollection<Ellipse>();
+        public ObservableCollection<Ellipse> CoilContainer = new ObservableCollection<Ellipse>();
         public ObservableCollection<Ellipse> EllipseContainer = new ObservableCollection<Ellipse>();
         private Random rnd = new Random();
         public CalculationPage()
@@ -44,75 +45,89 @@ namespace BLE
             this.InitializeComponent();
             CoilDeviced = App.AnchorCollection;
             SensorDeviced = App.SensorCollection;
-            CanvasPackage CatchCanvas = CreateAnCanvas(815, 510);
+            double[] position = new double[3]{ -10, 20, 0};
+            CanvasPackage CatchCanvas = CreateDrawObj(position, 3);
             PlacePart.Children.Add(CatchCanvas.OwnCanvas);
-            //CanvasPackage CatchCanvas = CreateAnCanvas(20, 100);
-            //PlacePart.Children.Add(CatchCanvas.OwnCanvas);
-            //CatchCanvas.OwnEllipse.SetValue(Canvas.LeftProperty, 100);
-            //EllipseContainer.Add(CatchCanvas.OwnEllipse);
-            //EllipseContainer[0].SetValue(Canvas.TopProperty, 100);
-            //SetPostion(EllipseContainer[0], 525.3, 533.5);
-            /*
-            for (var i = 0; i < 5; i++)
+            if(CoilDeviced != null)
             {
-                TestDraw.Add(new TestNode(i * 100, i * 100));
-                Debug.WriteLine("" + TestDraw.Count);
+                for (var i = 0; i < CoilDeviced.Count; i++)
+                {
+                    CanvasPackage tempCanvasPackage = CreateDrawObj(CoilDeviced[i].Position, 0);
+                    PlacePart.Children.Add(tempCanvasPackage.OwnCanvas);
+                    EllipseContainer.Add(tempCanvasPackage.OwnEllipse);
+                }
             }
-            for (var i = 0; i < TestDraw.Count; i++)
+            if(SensorDeviced != null)
             {
-                TestDraw[i].DrawObj();
-                PlacePart.Children.Add(TestDraw[i].OwnCanvas);
+                for (var i = 0; i < SensorDeviced.Count; i++)
+                {
+                    CanvasPackage tempCanvasPackage = CreateDrawObj(SensorDeviced[i].Position, 1);
+                    PlacePart.Children.Add(tempCanvasPackage.OwnCanvas);
+                    EllipseContainer.Add(tempCanvasPackage.OwnEllipse);
+                }
             }
-            */
+           
+        }
+
+
+        private double[] Project2D(double[] origin)
+        {
+            double[] result = new double[2];
+            result[0] = 813 - 7 * origin[0] + 10 * origin[1];
+            result[1] = 510 + 4 * origin[0] - 10 * origin[2];
+            return result;
+        }
+
+        private CanvasPackage CreateDrawObj(double []position, int colorCase)
+        {
+            double[] position2D = new double[2];
+            position2D = Project2D(position);
+            return CreateAnCanvas(position2D[0], position2D[1], colorCase);
+            
         }
 
         private async void Move(object sender, RoutedEventArgs e)
         {
-
-            CanvasPackage CatchCanvas = CreateAnCanvas(200, 400);
+            double[] position = new double[3] { 0, 0, 0 };
+            CanvasPackage CatchCanvas = CreateDrawObj(position, 1);
             PlacePart.Children.Add(CatchCanvas.OwnCanvas);
-            //CatchCanvas.OwnEllipse.SetValue(Canvas.LeftProperty, 100);
             EllipseContainer.Add(CatchCanvas.OwnEllipse);
-            //EllipseContainer[0].SetValue(Canvas.TopProperty, 100);
-            //SetPostion(EllipseContainer[0], 525.3, 533.5);
-            //TestMoving(EllipseContainer[0], 200, 400, 500, 500);
-            for(var i = 0; i< 100;  i++)
-            {
-                for(var j = 0; j< 20; j ++)
-                {
 
-                    SetPostion(EllipseContainer[0], 200 + 5 * i, 400 - j * 10);
-                    await Task.Delay(TimeSpan.FromSeconds(0.001));
-                }
+            for (var i = 0; i < 20; i++)
+            {
+                position[0] += 1;
+                SetPostion(EllipseContainer[0],position);
+                await Task.Delay(TimeSpan.FromSeconds(0.005));
+            }
+
+            for (var i = 0; i < 20; i++)
+            {
+                position[1] += 1;
+                SetPostion(EllipseContainer[0], position);
+                await Task.Delay(TimeSpan.FromSeconds(0.005));
+            }
+
+            for (var i = 0; i < 20; i++)
+            {
+                position[2] += 1;
+                SetPostion(EllipseContainer[0], position);
+                await Task.Delay(TimeSpan.FromSeconds(0.005));
             }
         }
 
 
-
-        private async void TestMoving(Ellipse obj,int initX, int initY, int moveX, int moveY)
+        public void SetPostion(Ellipse obj, double[] position3D)
         {
-            for (var i = initX; i< moveX; i++)
-            {
-                for(var j = initY; j < moveY; j++)
-                {
-                    SetPostion(obj, i , j);
-                    await Task.Delay(TimeSpan.FromSeconds(0.01));
-                }
-            }
-        }
-
-
-        public void SetPostion(Ellipse obj, double x, double y)
-        {
-            obj.SetValue(Canvas.LeftProperty, x);
-            obj.SetValue(Canvas.TopProperty, y);
+            double[] position2D = Project2D(position3D);
+            obj.SetValue(Canvas.LeftProperty, position2D[0]);
+            obj.SetValue(Canvas.TopProperty, position2D[1]);
 
         }
 
-        public CanvasPackage CreateAnCanvas(int x, int y)
+        public CanvasPackage CreateAnCanvas(double x, double y, int colorCase)
         {
             Canvas testCanvas = new Canvas();
-            Ellipse testEllipse = CreateAnEllipse();
+            Ellipse testEllipse = CreateAnEllipse(colorCase);
             testCanvas.Children.Add(testEllipse);
             testEllipse.SetValue(Canvas.LeftProperty, x);
             testEllipse.SetValue(Canvas.TopProperty, y);
@@ -120,22 +135,48 @@ namespace BLE
             return temp;
         }
 
-        public Ellipse CreateAnEllipse()
+        public Ellipse CreateAnEllipse(int colorCase)
         {
-            Ellipse blueRectangle = new Ellipse();
-            blueRectangle.Height = 50;
-            blueRectangle.Width = 50;
-            SolidColorBrush blueBrush = new SolidColorBrush();
-            blueBrush.Color = Colors.Azure;
-            SolidColorBrush blackBrush = new SolidColorBrush();
-            blackBrush.Color = Colors.Black;
-            blueRectangle.StrokeThickness = 4;
-            blueRectangle.Opacity = 0.8;
-            blueRectangle.Stroke = blackBrush;
-            blueRectangle.Fill = blueBrush;
-            return blueRectangle;
-            //blueRectangle.Width = 400;
+            Ellipse newRectangle = new Ellipse();
+            SolidColorBrush azureBrush = new SolidColorBrush
+            {
+                Color = Colors.Azure
+            };
+            SolidColorBrush blackBrush = new SolidColorBrush
+            {
+                Color = Colors.Black
+            };
+            SolidColorBrush coralBrush = new SolidColorBrush
+            {
+                Color = Colors.Coral
+            };
+            SolidColorBrush chocolateBrush = new SolidColorBrush
+            {
+                Color = Colors.Chocolate
+            };
 
+
+            switch (colorCase)
+            {
+                case 0:
+                    newRectangle.Fill = azureBrush;
+                    break;
+                case 1:
+                    newRectangle.Fill = coralBrush;
+                    break;
+
+                default:
+                    newRectangle.Fill = chocolateBrush;
+                    break;
+            }
+            
+            newRectangle.Height = 50;
+            newRectangle.Width = 50;
+            newRectangle.StrokeThickness = 4;
+            newRectangle.Opacity = 0.8;
+            newRectangle.Stroke = blackBrush;
+            
+            return newRectangle;
         }
     }
     

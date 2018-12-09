@@ -56,6 +56,13 @@ namespace BLE
                 return String.Format("MagX: {0}, MagY: {1}, MagZ: {2}", MagValue[0], MagValue[1], MagValue[2]);
             }
         }
+        public string PositionString
+        {
+            get
+            {
+                return String.Format("X: {0}, Y: {1}, Z: {2}", Position[0], Position[1], Position[2]);
+            }
+        }
 
         public BLENode(string BluetoothLEid, string Name, double[] position)
         {
